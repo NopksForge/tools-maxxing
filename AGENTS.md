@@ -12,7 +12,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 Community-curated AI tools catalog. Users discover, submit, review, and curate tools. **Stack:** Next.js 16 (App Router, RSC, Server Actions) · Supabase (Postgres + Auth + Storage + Edge Functions) · Postgres FTS · Discord/Telegram webhooks (Phase 3).
 
-Reference UI to port: `temp/app/` (Vite + shadcn) — **not** its MySQL/Drizzle/tRPC backend.
+Reference web design: **`reference-design/v2/`** (Toolsmaxxing V2). Static preview: open `reference-design/Toolsmaxxing V2.html` in a browser.
 
 ## Core mental model (memorize this)
 
@@ -88,6 +88,28 @@ OAuth only (GitHub + Google). No passwords.
 5. **Webhooks:** enqueue to `webhook_events`; cron/Edge Function dispatches with retries.
 6. **Counters:** `upvote_count` etc. maintained by triggers, not client updates.
 
+## Reference web design (Toolsmaxxing V2)
+
+**Use `reference-design/v2/` as the visual and UX source of truth.** Port its layout, typography, spacing, and screen flows into the Next.js app — do not invent a new design language.
+
+| Screen | Reference file |
+| ------ | -------------- |
+| Browse / home | `v2/screen-browse.jsx` |
+| Tool detail | `v2/screen-detail.jsx` |
+| Submit | `v2/screen-submit.jsx` |
+| Profile | `v2/screen-profile.jsx` |
+| Settings / auth | `v2/screen-settings-auth.jsx` |
+
+Shared pieces: `v2/components.jsx`, `v2/nav.jsx`, `v2/icons.jsx`, `v2/styles.css`, mock data in `v2/data.jsx`.
+
+**How to use it:**
+- Match V2 look-and-feel (accent `#389B9B`, Inter + JetBrains Mono, card density, filter chips, tool cards).
+- Treat it as a **design prototype** — React SPA loaded via CDN/Babel, not production architecture. Reimplement in Next.js App Router + Tailwind v4 + shadcn/ui.
+- Wire real Supabase data; keep mock data only for Storybook/dev fixtures if needed.
+- Ignore `reference-design/src/` (V1) and `Toolsmaxxing V1.html` unless explicitly asked — V2 supersedes them.
+
+**Token rule:** Read only the specific V2 screen file(s) relevant to the task; don't load the whole folder.
+
 ## Next.js 16 conventions
 
 Before writing routes, read `node_modules/next/dist/docs/01-app/02-guides/{authentication,instant-navigation,rendering-philosophy}.md`.
@@ -115,6 +137,5 @@ NEXT_PUBLIC_SITE_URL=        # OAuth redirectTo base
 | Schema, RLS, dedup, search, edit conflicts, reputation | `system-design.md` §3–9 |
 | What to build next, phase boundaries, dependencies | `task.md` |
 | Route map, Server Action contracts (may be outdated) | `CLAUDE.md` — verify against `system-design.md` first |
-| UI components | `temp/app/src/components/ui` |
-
-## UPDATE THIS IF SOMETHING CHANGE
+| UI layout, styling, screen flows | `reference-design/v2/` (see table above) |
+| shadcn primitives | port/adapt as needed; no separate reference app |
