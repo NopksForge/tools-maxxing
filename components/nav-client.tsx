@@ -71,6 +71,46 @@ interface NavClientProps {
   profile: Profile | null;
 }
 
+// Static nav shell used as the Suspense fallback in the app layout.
+// Must not use any hooks (no usePathname, useRouter, etc.) so it can be
+// statically prerendered as the Suspense boundary shell for [slug] and other
+// dynamic routes when cacheComponents is enabled.
+export function NavSkeleton() {
+  return (
+    <nav className="nav">
+      <a href="/browse" className="nav-logo">
+        <div className="logo-mark">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M3 3L11 11M11 3L3 11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+        </div>
+        <span className="logo-word">Toolsmaxxing</span>
+      </a>
+
+      <div className="nav-search">
+        <span className="ic">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="7" cy="7" r="4.5" stroke="currentColor" strokeWidth="1.8" />
+            <path d="M11 11L14 14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+        </span>
+        <input placeholder="Search tools, tags, or paste a URL…" readOnly />
+        <span className="kbd">⌘K</span>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 16, marginLeft: "auto" }}>
+        <div className="nav-links">
+          <a href="/browse" className="nav-link">Browse</a>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <a href="/login" className="btn ghost" style={{ padding: "6px 12px" }}>Log in</a>
+          <a href="/login" className="btn primary" style={{ padding: "6px 14px" }}>Get started</a>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
 export function NavClient({ profile }: NavClientProps) {
   const pathname = usePathname();
   const router = useRouter();

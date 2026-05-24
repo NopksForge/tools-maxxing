@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { NavServer } from "@/components/nav-server";
-import { NavClient } from "@/components/nav-client";
+import { NavSkeleton } from "@/components/nav-client";
 
 export default function AppLayout({
   children,
@@ -9,7 +9,7 @@ export default function AppLayout({
 }) {
   return (
     <>
-      <Suspense fallback={<NavClient profile={null} />}>
+      <Suspense fallback={<NavSkeleton />}>
         <NavServer />
       </Suspense>
       <main className="page-body">{children}</main>
