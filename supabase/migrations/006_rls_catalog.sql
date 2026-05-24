@@ -6,9 +6,17 @@
 alter table public.tools enable row level security;
 create policy "tools_select_all" on public.tools for select using (true);
 create policy "tools_insert_auth" on public.tools for insert with check (auth.uid() is not null);
-create policy "tools_update_owner_or_admin" on public.tools for update
-  using (auth.uid() = submitted_by or
-    (select role from public.profiles where id = auth.uid()) = 'admin');
+-- submitters can update non-pin fields on their own tool
+create policy "tools_update_owner" on public.tools for update
+  using (auth.uid() = submitted_by)
+  with check (
+    is_pinned = (select is_pinned from public.tools where id = tools.id) and
+    pin_order is not distinct from (select pin_order from public.tools where id = tools.id)
+  );
+
+-- admins can update anything including pin fields
+create policy "tools_update_admin" on public.tools for update
+  using ((select role from public.profiles where id = auth.uid()) = 'admin');
 
 -- tags
 alter table public.tags enable row level security;
