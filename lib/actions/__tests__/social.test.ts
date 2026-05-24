@@ -37,7 +37,7 @@ describe('toggleUpvote', () => {
     })
     await toggleUpvote('tool-1')
     expect(mockInsert).toHaveBeenCalledWith({ user_id: 'user-1', tool_id: 'tool-1' })
-    expect(revalidateTag).toHaveBeenCalledWith('tool-tool-1')
+    expect(revalidateTag).toHaveBeenCalledWith('tool-tool-1', 'max')
   })
 
   it('deletes upvote when already upvoted', async () => {

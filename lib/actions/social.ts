@@ -27,7 +27,7 @@ export async function toggleUpvote(
       .delete()
       .eq('user_id', user.id)
       .eq('tool_id', toolId)
-    revalidateTag(`tool-${toolId}`)
+    revalidateTag(`tool-${toolId}`, 'max')
     return { data: { upvoted: false } }
   }
 
@@ -36,7 +36,7 @@ export async function toggleUpvote(
     .insert({ user_id: user.id, tool_id: toolId })
   if (error) return { error: error.message }
 
-  revalidateTag(`tool-${toolId}`)
+  revalidateTag(`tool-${toolId}`, 'max')
   return { data: { upvoted: true } }
 }
 
@@ -90,7 +90,7 @@ export async function postReview(
   )
   if (error) return { error: error.message }
 
-  revalidateTag(`tool-${toolId}`)
+  revalidateTag(`tool-${toolId}`, 'max')
   return { data: null }
 }
 
@@ -113,6 +113,6 @@ export async function postComment(
   })
   if (error) return { error: error.message }
 
-  revalidateTag(`tool-${toolId}`)
+  revalidateTag(`tool-${toolId}`, 'max')
   return { data: null }
 }

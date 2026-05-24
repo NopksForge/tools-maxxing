@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { checkDuplicate } from '@/lib/actions/catalog'
-import type { Tool } from '@/lib/supabase/types'
+import type { DuplicateHint } from '@/lib/actions/catalog'
 import Link from 'next/link'
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 
 export function StepUrl({ onContinue }: Props) {
   const [url, setUrl] = useState('')
-  const [duplicate, setDuplicate] = useState<Tool | null>(null)
+  const [duplicate, setDuplicate] = useState<DuplicateHint | null>(null)
   const [isChecking, setIsChecking] = useState(false)
   const [, startTransition] = useTransition()
   const [error, setError] = useState('')

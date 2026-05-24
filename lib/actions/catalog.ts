@@ -6,9 +6,11 @@ import type { Tool } from '@/lib/supabase/types'
 
 type ActionResult<T> = { error: string } | { data: T }
 
+export type DuplicateHint = Pick<Tool, 'id' | 'slug' | 'name' | 'logo_url' | 'pricing_model'>
+
 export async function checkDuplicate(
   url: string
-): Promise<{ duplicate: Tool | null }> {
+): Promise<{ duplicate: DuplicateHint | null }> {
   const supabase = await createClient()
 
   const { data: normalizedUrl, error: rpcError } = await supabase.rpc(
@@ -23,7 +25,7 @@ export async function checkDuplicate(
     .eq('normalized_url', normalizedUrl)
     .maybeSingle()
 
-  return { duplicate: existing ?? null }
+  return { duplicate: (existing as DuplicateHint | null) ?? null }
 }
 
 export type SubmitToolInput = {
@@ -127,7 +129,7 @@ export async function submitTool(
     )
   }
 
-  revalidateTag('catalog')
+  revalidateTag('catalog', 'max')
   return { data: { slug: tool.slug } }
 }
 

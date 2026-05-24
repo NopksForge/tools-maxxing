@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { SubmitWizard } from '@/components/submit/SubmitWizard'
@@ -6,7 +7,7 @@ export const metadata = {
   title: 'Submit a Tool — Toolsmaxxing',
 }
 
-export default async function SubmitPage() {
+async function AuthGate() {
   const supabase = await createClient()
   const {
     data: { user },
@@ -16,6 +17,10 @@ export default async function SubmitPage() {
     redirect('/login?next=/submit')
   }
 
+  return <SubmitWizard />
+}
+
+export default function SubmitPage() {
   return (
     <div style={{ maxWidth: 640, margin: '0 auto', padding: '48px 24px' }}>
       <div style={{ marginBottom: 32 }}>
@@ -25,7 +30,9 @@ export default async function SubmitPage() {
         </h1>
         <p className="lede">Share an AI tool with the community.</p>
       </div>
-      <SubmitWizard />
+      <Suspense>
+        <AuthGate />
+      </Suspense>
     </div>
   )
 }
