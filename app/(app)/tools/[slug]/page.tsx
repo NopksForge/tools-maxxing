@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createPublicClient } from '@/lib/supabase/server'
 import { cacheTag } from 'next/cache'
 import type { CommentWithProfile } from '@/components/social/CommentThread'
 import { UpvoteButton } from '@/components/social/UpvoteButton'
@@ -14,7 +14,7 @@ type Params = Promise<{ slug: string }>
 async function getToolMeta(slug: string) {
   'use cache'
   cacheTag(`tool-slug-${slug}`)
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from('tools')
     .select('name, description')
@@ -64,7 +64,7 @@ async function ToolDetail({ slug }: { slug: string }) {
   'use cache'
   cacheTag(`tool-slug-${slug}`)
 
-  const supabase = await createClient()
+  const supabase = createPublicClient()
 
   const { data: tool } = await supabase
     .from('tools')

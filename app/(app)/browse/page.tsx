@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/server'
 import { cacheTag } from 'next/cache'
 import type { Tool } from '@/lib/supabase/types'
 import { FilterRail } from '@/components/catalog/FilterRail'
@@ -78,7 +78,7 @@ async function CachedCatalog({ params }: { params: FilterParams }) {
   'use cache'
   cacheTag('catalog')
 
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   let query = supabase.from('tools').select('*')
 
   if (params.pricing) query = query.eq('pricing_model', params.pricing)

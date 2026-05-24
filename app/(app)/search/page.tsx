@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/server'
 import { cacheTag } from 'next/cache'
 import type { Tool } from '@/lib/supabase/types'
 import { FilterRail } from '@/components/catalog/FilterRail'
@@ -109,7 +109,7 @@ async function CachedSearchResults({
   'use cache'
   cacheTag('catalog')
 
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   let tools: Tool[] = []
 
   // FTS for queries longer than 2 chars
