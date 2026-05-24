@@ -1,29 +1,17 @@
-import { createClient } from "@/lib/supabase/server";
+import { Suspense } from "react";
+import { NavServer } from "@/components/nav-server";
 import { NavClient } from "@/components/nav-client";
 
-export default async function AppLayout({
+export default function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  let profile = null;
-  if (user) {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
-    profile = data;
-  }
-
   return (
     <>
-      <NavClient profile={profile} />
+      <Suspense fallback={<NavClient profile={null} />}>
+        <NavServer />
+      </Suspense>
       <main className="page-body">{children}</main>
     </>
   );
